@@ -1,0 +1,8 @@
+
+node_modules/
+dst/
+
+docker/.env.prod
+config.prod.yml
+
+notes.md

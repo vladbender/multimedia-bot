@@ -1,0 +1,43 @@
+name: multimedia_bot
+
+services:
+  app:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    image: multimedia_bot:latest
+    container_name: multimedia_bot
+    networks:
+      - multimedia_bot
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - multimedia_bot
+    # ports:
+    #   - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 5s
+
+networks:
+  multimedia_bot:
+    name: multimedia_bot
+
+volumes:
+  postgres:
+    name: postgres
+    driver: local
