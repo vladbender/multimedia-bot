@@ -1,5 +1,7 @@
 # Multimedia Bot
 
+The bot is created to store information about available features in carsharing cars.
+
 ## Run locally
 
 Required software:
