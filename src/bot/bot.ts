@@ -7,7 +7,14 @@ import { type CarsService, type UserService, State } from '../services'
 import { parseAddPlateNumbers, parseCheckPlateNumbers } from '../parsers'
 import { logger } from '../logger'
 
-import { addNumbersMessage, startMessage, successfulAddingMessage, createCheckMessage, noPlateNumbersMessage } from './messages'
+import {
+  addNumbersMessage,
+  startMessage,
+  successfulAddingMessage,
+  createCheckMessage,
+  noPlateNumbersInAddMessage,
+  noPlateNumbersInCheckMessage
+} from './messages'
 import { Button } from './button'
 import { addMarkup, backToMenuMarkup } from './markups'
 
@@ -50,7 +57,7 @@ export class Bot {
   }
 
   private async onStart(ctx: Context): Promise<void> {
-    await ctx.reply(startMessage, addMarkup)
+    await ctx.replyWithMarkdownV2(startMessage, addMarkup)
   }
 
   private async onMessage(ctx: NarrowedContext<Context<Update>, Update.MessageUpdate>): Promise<void> {
@@ -63,7 +70,7 @@ export class Bot {
     if (userState === State.CheckNumber) {
       const plateNumbers = parseCheckPlateNumbers(ctx.text)
       if (plateNumbers === undefined) {
-        await ctx.reply(noPlateNumbersMessage)
+        await ctx.reply(noPlateNumbersInCheckMessage)
         return
       }
       const statuses = await this.carsService.checkCarHasMultimedia(plateNumbers)
@@ -72,7 +79,7 @@ export class Bot {
     } else if (userState === State.AddNumber) {
       const plateNumbers = parseAddPlateNumbers(ctx.text)
       if (plateNumbers === undefined) {
-        await ctx.reply(noPlateNumbersMessage)
+        await ctx.reply(noPlateNumbersInAddMessage)
         return
       }
       await this.carsService.addCarsHasMultimedia({
@@ -95,7 +102,7 @@ export class Bot {
       return
     }
     await this.userService.changeUserState(telegramId, State.AddNumber)
-    await ctx.reply(addNumbersMessage, backToMenuMarkup)
+    await ctx.replyWithMarkdownV2(addNumbersMessage, backToMenuMarkup)
   }
 
   private async onBackToMainMenuButton(ctx: Context): Promise<void> {
@@ -108,6 +115,6 @@ export class Bot {
       return
     }
     await this.userService.changeUserState(telegramId, State.CheckNumber)
-    await ctx.reply(startMessage, addMarkup)
+    await ctx.replyWithMarkdownV2(startMessage, addMarkup)
   }
 }

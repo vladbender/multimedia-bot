@@ -22,7 +22,7 @@ Running:
 
 3. Up database:
   ```shell
-  docker compose --file=docker/docker-compose.yml --env-file=docker/.env up -d postgres
+  docker compose --file=docker/docker-compose.yml --env-file=docker/.env up -d db
   ```
 
 4. Run migrations:

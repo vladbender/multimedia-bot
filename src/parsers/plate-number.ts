@@ -1,6 +1,6 @@
 
-const addRegexp = /([A-ZА-ЯË]{3} ?[0-9]{3}) (есть|нет)/gi
-const checkRegexp = /([A-ZА-ЯË]{3} ?[0-9]{3})/gi
+const addRegexp = /([A-ZА-ЯË]{1} ?[A-ZА-ЯË]{1} ?[A-ZА-ЯË]{1} ?[0-9]{1} ?[0-9]{1} ?[0-9]{1}) (есть|нет)/gi
+const checkRegexp = /([A-ZА-ЯË]{1} ?[A-ZА-ЯË]{1} ?[A-ZА-ЯË]{1} ?[0-9]{1} ?[0-9]{1} ?[0-9]{1})/gi
 
 export const parseAddPlateNumbers = (input: string | undefined) => {
   if (!input) {

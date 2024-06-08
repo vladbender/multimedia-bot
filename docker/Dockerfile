@@ -2,7 +2,9 @@ FROM node:22.1.0-alpine as builder
 
   WORKDIR /app
   COPY ../ ./
-  RUN npm ci && npm run build
+  RUN npm ci && \
+      npm run build && \
+      npm ci --omit=dev
 
 FROM node:22.1.0-alpine
 

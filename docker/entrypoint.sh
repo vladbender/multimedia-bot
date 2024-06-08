@@ -1,3 +1,3 @@
 
 npm run knex:migrate && \
-  node dst/main.js
+  node --no-deprecation dst/main.js
