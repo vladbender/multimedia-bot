@@ -6,5 +6,5 @@ export const addMarkup = Markup.inlineKeyboard([
 ])
 
 export const backToMenuMarkup = Markup.inlineKeyboard([
-  Markup.button.callback('Назад', Button.BackToMainMenu)
+  Markup.button.callback('Проверить номера', Button.BackToMainMenu)
 ])
