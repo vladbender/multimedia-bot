@@ -62,11 +62,14 @@ export class Bot {
 
   private async onMessage(ctx: NarrowedContext<Context<Update>, Update.MessageUpdate>): Promise<void> {
     const telegramId = String(ctx.update.message.from.id)
+    const username = ctx.update.message.from.username
+    const text = (ctx.text ?? '').replace(/\n/g, ' ')
 
-    logger.log(`NEW_MESSAGE telegramId=${telegramId} username=${ctx.update.message.from.username} text="${(ctx.text ?? '').replace(/\n/g, ' ')}"`)
+    logger.log(`NEW_MESSAGE telegramId=${telegramId} username=${username} text="${text}"`)
 
     const userState = await this.userService.getUserState(telegramId)
 
+    // TODO отдельные хендлеры
     if (userState === State.CheckNumber) {
       const plateNumbers = parseCheckPlateNumbers(ctx.text)
       if (plateNumbers === undefined) {
@@ -88,14 +91,16 @@ export class Bot {
           telegramId
         }
       })
-      await ctx.reply(successfulAddingMessage, backToMenuMarkup)
+      await this.userService.changeUserState(telegramId, State.CheckNumber)
+      await ctx.reply(successfulAddingMessage)
     }
   }
 
-  private async onAddNumberButton(ctx: Context): Promise<void> {
+  private async onAddNumberButton(ctx: Context<Update.CallbackQueryUpdate>): Promise<void> {
     const telegramId = String(ctx.chat?.id)
+    const username = ctx.update.callback_query.from.username
 
-    logger.log(`onAddNumberButton telegramId=${telegramId}`)
+    logger.log(`onAddNumberButton telegramId=${telegramId} username=${username}`)
 
     if (telegramId === undefined) {
       logger.error('onAddNumberButton no telegramId', ctx)
@@ -105,10 +110,11 @@ export class Bot {
     await ctx.replyWithMarkdownV2(addNumbersMessage, backToMenuMarkup)
   }
 
-  private async onBackToMainMenuButton(ctx: Context): Promise<void> {
+  private async onBackToMainMenuButton(ctx: Context<Update.CallbackQueryUpdate>): Promise<void> {
     const telegramId = String(ctx.chat?.id)
+    const username = ctx.update.callback_query.from.username
 
-    logger.log(`onBackToMainMenuButton telegramId=${telegramId}`)
+    logger.log(`onBackToMainMenuButton telegramId=${telegramId} username=${username}`)
 
     if (telegramId === undefined) {
       logger.error('onBackToMainMenuButton no telegramId', ctx)

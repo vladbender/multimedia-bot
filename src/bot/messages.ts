@@ -23,7 +23,7 @@ MHE 143 нет
 `.trim()
 
 export const successfulAddingMessage = `
-Номера успешно добавлены
+Номера успешно добавлены! Можете опять присылать номера на проверку ☺️
 `.trim()
 
 export const noPlateNumbersInAddMessage = `

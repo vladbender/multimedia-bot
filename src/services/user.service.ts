@@ -32,7 +32,7 @@ export class UserService {
   async changeUserState(telegramId: string, state: State): Promise<void> {
     await this.knex.transaction(async (trx) => {
       const [user] = await trx<User>('users')
-        .update({ state }, ['id'])
+        .update({ state, updated_at: new Date() }, ['id'])
         .where({ telegram_id: telegramId })
       if (user) {
         return
