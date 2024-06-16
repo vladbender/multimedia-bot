@@ -1,5 +1,5 @@
 
-import type { HasMultimedia, CheckCarResult } from '../services'
+import type { HasMultimedia, CheckCarResult, UsersStat, CarsStat } from '../services'
 
 export const startMessage = `
 Пришлите один или несколько номеров на проверку
@@ -44,4 +44,13 @@ export const createCheckMessage = (checkCarResult: CheckCarResult[]): string => 
   return checkCarResult
     .map(({ originalPlateNumber, hasMultimedia }) => `${originalPlateNumber} ${mapHasMultimedia[hasMultimedia]}`)
     .join('\n')
+}
+
+export const createStatMessage = (usersStat: UsersStat, carsStat: CarsStat): string => {
+  return `
+Статистика:
+
+Количество машин: ${carsStat.carsCount}, имеют блютуз: ${carsStat.carsWithMultimediaCount}.
+Пользователей: ${usersStat.usersCount}.
+  `.trim()
 }

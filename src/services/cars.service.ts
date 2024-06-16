@@ -23,6 +23,11 @@ export type AddCarInput = {
   }
 }
 
+export type CarsStat = {
+  carsCount: number
+  carsWithMultimediaCount: number
+}
+
 type DbCar = {
   id: number
   number: string
@@ -90,5 +95,16 @@ export class CarsService {
           updated_at = now()`
 
     await this.knex.raw(query, parameters)
+  }
+
+  async getStat(): Promise<CarsStat> {
+    const result: { total: string, has_multimedia: string }[] = await this.knex<DbCar>('cars')
+      .count('id', { as: 'total' })
+      .select(this.knex.raw('sum(has_multimedia::int) as has_multimedia'))
+    const [{ total, has_multimedia }] = result
+    return {
+      carsCount: Number(total),
+      carsWithMultimediaCount: Number(has_multimedia)
+    }
   }
 }

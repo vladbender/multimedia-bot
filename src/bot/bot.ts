@@ -8,12 +8,13 @@ import { parseAddPlateNumbers, parseCheckPlateNumbers } from '../parsers'
 import { logger } from '../logger'
 
 import {
-  addNumbersMessage,
   startMessage,
+  addNumbersMessage,
   successfulAddingMessage,
   createCheckMessage,
+  createStatMessage,
   noPlateNumbersInAddMessage,
-  noPlateNumbersInCheckMessage
+  noPlateNumbersInCheckMessage,
 } from './messages'
 import { Button } from './button'
 import { addMarkup, backToMenuMarkup } from './markups'
@@ -29,6 +30,7 @@ export class Bot {
     const bot = new Telegraf(this.config.telegram.token)
 
     bot.command('start', (ctx) => this.onStart(ctx))
+    bot.command('stat', (ctx) => this.onStat(ctx))
 
     bot.on('message', (ctx) => this.onMessage(ctx))
 
@@ -58,6 +60,16 @@ export class Bot {
 
   private async onStart(ctx: Context): Promise<void> {
     await ctx.replyWithMarkdownV2(startMessage, addMarkup)
+  }
+
+  private async onStat(ctx: NarrowedContext<Context<Update>, Update.MessageUpdate>): Promise<void> {
+    const telegramId = ctx.update.message.from.id
+    if (!this.config.admin_ids.includes(telegramId)) {
+      return
+    }
+    const usersStat = await this.userService.getStat()
+    const carsStat = await this.carsService.getStat()
+    await ctx.reply(createStatMessage(usersStat, carsStat))
   }
 
   private async onMessage(ctx: NarrowedContext<Context<Update>, Update.MessageUpdate>): Promise<void> {

@@ -17,6 +17,7 @@ export type Config = {
     password: string
     database: string
   }
+  admin_ids: number[]
 }
 
 let config: Config | undefined
@@ -30,7 +31,10 @@ export const getConfig = (): Config => {
 
 const loadConfig = (): Config => {
   const content = readFileSync(join(__dirname, '../config.yml'), { encoding: 'utf-8' })
-  const config = YAML.parse(content)
+  const config: Config = YAML.parse(content)
   // TODO validate?
-  return config as Config
+  if (!config.admin_ids) {
+    config.admin_ids = []
+  }
+  return config
 }

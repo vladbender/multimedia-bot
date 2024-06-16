@@ -13,6 +13,10 @@ export type User = {
   updated_at: Date
 }
 
+export type UsersStat = {
+  usersCount: number
+}
+
 export class UserService {
   constructor (private readonly knex: Knex) {}
 
@@ -44,5 +48,13 @@ export class UserService {
           updated_at: new Date(),
         })
     })
+  }
+
+  async getStat(): Promise<UsersStat> {
+    const [stat] = await this.knex<User>('users')
+      .count('id');
+    return {
+      usersCount: Number(stat.count),
+    }
   }
 }
