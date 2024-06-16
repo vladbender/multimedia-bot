@@ -11,3 +11,6 @@ db:
   user: 'user'
   password: '12345678'
   database: 'db'
+
+admin_ids:
+  - 123456789

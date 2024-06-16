@@ -4,5 +4,6 @@ dst/
 
 docker/.env.prod
 config.prod.yml
+config.yml
 
 notes.md

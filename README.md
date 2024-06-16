@@ -9,7 +9,10 @@ Required software:
 2. Node.js
 
 Running:
-1. Place Telegram token [in this config](config.yml) file:
+1. Copy [example config](config.example.yml) and change it:
+  ```shell
+  cp config.example.yml config.yml
+  ```
   ```yml
   telegram:
     token: 'place your token here'
